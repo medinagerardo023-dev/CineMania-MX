@@ -1,0 +1,1910 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CineMania MX - Estrenos y Reseñas</title>
+    <style>
+        .resenas-pag {
+          background-color: #2a2a2a;
+          padding: 25px;
+          border-radius: 10px;
+          border: 2px solid #E50914;
+          margin: 25px 0;
+       } 
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #222222;
+            color: #e0e0e0;
+            line-height: 1.6;
+        }
+
+        /* Header */
+        header {
+            background: linear-gradient(135deg, #913a3a 0%, #3127a0 100%);
+            padding: 30px 0;
+           box-shadow: 0 4px 15px rgba(143, 78, 78, 0.3);
+            border-bottom: 3px solid #E50914;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            color: #fbfafb;
+            font-weight: bold;
+            letter-spacing: 2px;
+        }
+
+        .tagline {
+            color: #888;
+            font-size: 0.9rem;
+            margin-top: 5px;
+        }
+
+        /* Navegación */
+        nav {
+            display: flex;
+            gap: 30px;
+        }
+
+        nav a {
+            color: #e0e0e0;
+            text-decoration: none;
+            transition: color 0.3s;
+            font-size: 0.95rem;
+        }
+
+        nav a:hover {
+            color: #E50914;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, rgba(15, 1, 1, 0) 0%, rgba(30, 1, 1, 0.5) 100%);
+            padding: 60px 0;
+            text-align: center;
+            border-bottom: 1px solid #5a20a2;
+        }
+
+        .hero h2 {
+            font-size: 2rem;
+            margin-bottom: 15px;
+            color: #ffffff;
+        }
+
+        .hero p {
+            font-size: 1.1rem;
+            color: #aaa;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Contenido principal */
+        main {
+            padding: 60px 0;
+        }
+
+        .mes-seccion {
+            margin-bottom: 80px;
+        }
+
+        .mes-titulo {
+            font-size: 2rem;
+            color: #b11b23;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #E50914;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Grid de dos columnas */
+        .peliculas-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        /* Tarjeta simple de película */
+        .pelicula-card {
+            background: linear-gradient(135deg, #e8edee 0%, #1e1b4b 100%);
+            border: 2px solid #000000;
+            border-radius: 8px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        .pelicula-card:hover {
+            border-color: #E50914;
+            box-shadow: 0 8px 25px rgba(229, 9, 20, 0.4);
+            transform: translateY(-5px);
+        }
+
+        .pelicula-imagen {
+            width: 100%;
+            height: 300px;
+            background: linear-gradient(135deg, #444 0%, #333 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #E50914;
+            font-size: 4rem;
+            border-bottom: 2px solid #E50914;
+        }
+
+        .pelicula-footer {
+            padding: 20px;
+            text-align: center;
+        }
+
+        .pelicula-titulo {
+            font-size: 1.3rem;
+            color: #ffffff;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .pelicula-fecha {
+            display: inline-block;
+            background-color: #5d09e5;
+            color: white;
+            padding: 6px 14px;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            font-weight: bold;
+        }
+
+        /* Modal Principal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            overflow-y: auto;
+        }
+
+        .modal.active {
+            display: block;
+        }
+
+        .modal-content {
+            background-color: #222222;
+            margin: 0 auto;
+            padding: 0;
+            border: 2px solid #E50914;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 1000px;
+            margin-top: 30px;
+            margin-bottom: 30px;
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, #333333 0%, #2a2a2a 100%);
+            color: white;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #E50914;
+            position: relative;
+        }
+
+        .modal-header h2 {
+            margin: 0;
+            color: #E50914;
+            font-size: 1.8rem;
+        }
+
+        .close-btn {
+            color: #E50914;
+            font-size: 2.5rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: color 0.3s;
+            background: none;
+            border: none;
+        }
+
+        .close-btn:hover {
+            color: #ffffff;
+        }
+
+        .modal-body {
+            padding: 30px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        /* Columna Izquierda - Info Película */
+        .info-pelicula {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .pelicula-imagen-grande {
+            width: 100%;
+            height: 350px;
+            background: linear-gradient(135deg, #444 0%, #333 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #E50914;
+            font-size: 5rem;
+            border-radius: 8px;
+            border: 2px solid #E50914;
+            margin-bottom: 20px;
+        }
+
+        .info-badges {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+
+        .badge {
+            background-color: #444;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            border: 1px solid #E50914;
+        }
+
+        .info-text {
+            color: #aaa;
+            font-size: 0.95rem;
+            margin-bottom: 12px;
+        }
+
+        .info-text strong {
+            color: #E50914;
+        }
+
+        .streaming-platforms {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #444;
+        }
+
+        .streaming-title {
+            color: #E50914;
+            font-weight: bold;
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+        }
+
+        .streaming-links {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .streaming-link {
+            display: inline-block;
+            background-color: #333;
+            border: 1px solid #E50914;
+            color: #E50914;
+            padding: 6px 12px;
+            border-radius: 4px;
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: bold;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .streaming-link:hover {
+            background-color: #E50914;
+            color: white;
+        }
+
+        /* Columna Derecha - Tabs */
+        .modal-tabs {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .tabs-header {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #444;
+        }
+
+        .tab-btn {
+            background: none;
+            border: none;
+            color: #aaa;
+            padding: 12px 16px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            font-weight: bold;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+        }
+
+        .tab-btn.active {
+            color: #E50914;
+            border-bottom-color: #E50914;
+        }
+
+        .tab-btn:hover {
+            color: #E50914;
+        }
+
+        .tab-content {
+            display: none;
+            flex: 1;
+            overflow-y: auto;
+            max-height: 500px;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Sinopsis */
+        .sinopsis-texto {
+            color: #b0b0b0;
+            line-height: 1.7;
+            font-size: 0.95rem;
+            margin-bottom: 20px;
+        }
+
+        .dato {
+            margin-bottom: 15px;
+            border-left: 3px solid #E50914;
+            padding-left: 12px;
+        }
+
+        .dato-label {
+            color: #E50914;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        .dato-valor {
+            color: #aaa;
+            margin-top: 3px;
+        }
+
+        /* Trailers */
+        .trailers-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .trailer-item {
+            background-color: #333;
+            padding: 15px;
+            border-radius: 6px;
+            border: 1px solid #444;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .trailer-item:hover {
+            border-color: #E50914;
+            background-color: #2a2a2a;
+        }
+
+        .trailer-titulo {
+            color: #E50914;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .trailer-desc {
+            color: #aaa;
+            font-size: 0.85rem;
+        }
+
+        /* Predicciones */
+        .prediccion-item {
+            background-color: #333;
+            padding: 12px;
+            border-radius: 6px;
+            border-left: 3px solid #E50914;
+            margin-bottom: 12px;
+        }
+
+        .prediccion-titulo {
+            color: #E50914;
+            font-weight: bold;
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+        }
+
+        .prediccion-texto {
+            color: #aaa;
+            font-size: 0.85rem;
+            line-height: 1.5;
+        }
+
+        /* Reseñas */
+        .resenas-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .resena {
+            background-color: #333;
+            padding: 15px;
+            border-radius: 6px;
+            border-left: 3px solid #E50914;
+        }
+
+        .resena-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 10px;
+        }
+
+        .resena-autor {
+            color: #E50914;
+            font-weight: bold;
+            font-size: 0.95rem;
+        }
+
+        .resena-calificacion {
+            color: #FFD700;
+            font-size: 0.9rem;
+        }
+
+        .resena-texto {
+            color: #b0b0b0;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            margin-bottom: 10px;
+        }
+
+        .resena-fecha {
+            color: #888;
+            font-size: 0.8rem;
+        }
+
+        /* Formulario de Reseña */
+        .resena-form {
+            background-color: #2a2a2a;
+            padding: 15px;
+            border-radius: 6px;
+            border: 1px solid #444;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 12px;
+        }
+
+        .form-label {
+            color: #E50914;
+            font-weight: bold;
+            font-size: 0.9rem;
+            display: block;
+            margin-bottom: 6px;
+        }
+
+        .form-input, .form-textarea {
+            width: 100%;
+            padding: 10px;
+            background-color: #333;
+            border: 1px solid #444;
+            color: #e0e0e0;
+            border-radius: 4px;
+            font-family: inherit;
+            font-size: 0.9rem;
+        }
+
+        .form-input:focus, .form-textarea:focus {
+            outline: none;
+            border-color: #E50914;
+            background-color: #2a2a2a;
+        }
+
+        .form-textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .estrellas {
+            display: flex;
+            gap: 5px;
+            margin-bottom: 12px;
+        }
+
+        .estrella {
+            font-size: 1.8rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .estrella:hover, .estrella.active {
+            color: #FFD700;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+        }
+
+        .submit-btn {
+            background-color: #E50914;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            width: 100%;
+            font-size: 0.95rem;
+        }
+
+        .submit-btn:hover {
+            background-color: #c70812;
+            box-shadow: 0 4px 15px rgba(229, 9, 20, 0.4);
+        }
+
+        /* Footer */
+        footer {
+            background: #1a1a1a;
+            padding: 40px 0;
+            border-top: 2px solid #E50914;
+            margin-top: 80px;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .footer-section h3 {
+            color: #E50914;
+            margin-bottom: 15px;
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section ul li {
+            margin-bottom: 8px;
+        }
+
+        .footer-section ul li a {
+            color: #aaa;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-section ul li a:hover {
+            color: #E50914;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid #444;
+            color: #666;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .modal-body {
+                grid-template-columns: 1fr;
+            }
+
+            .peliculas-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.8rem;
+            }
+
+            .header-content {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            nav {
+                flex-direction: column;
+                gap: 10px;
+                justify-content: center;
+                flex-wrap: wrap;
+            }
+
+            .peliculas-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .hero h2 {
+                font-size: 1.5rem;
+            }
+
+            .modal-content {
+                width: 95%;
+            }
+
+            .modal-body {
+                padding: 20px;
+                gap: 20px;
+            }
+
+            .pelicula-imagen-grande {
+                height: 250px;
+                font-size: 3rem;
+            }
+
+            .tab-content {
+                max-height: 400px;
+            }
+        }
+
+        /* Animación */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .pelicula-card {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        .modal {
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        /* Scroll personalizado */
+        .tab-content::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .tab-content::-webkit-scrollbar-track {
+            background: #333;
+            border-radius: 10px;
+        }
+
+        .tab-content::-webkit-scrollbar-thumb {
+            background: #E50914;
+            border-radius: 10px;
+        }
+
+        .tab-content::-webkit-scrollbar-thumb:hover {
+            background: #c70812;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div>
+                    <h1><a>🎬 CineMania MX</a></h1>
+                    <p class="tagline">Descubre estrenos, trailers, reseñas y predicciones</p>
+                </div>
+                <nav>
+                    <a href="#enero">Enero</a>
+                    <a href="#febrero">Febrero</a>
+                    <a href="#marzo">Marzo</a>
+                    <a href="#abril">Abril</a>
+                    <a href="#mayo">Mayo</a>
+                    <a href="#junio">Junio</a>
+                    <a href="#julio">Julio</a>
+                    <a href="#diciembre">Diciembre</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <h2>Películas Más Esperadas 2026</h2>
+            <p>Haz clic en cualquier película para ver sinopsis, trailers, predicciones y reseñas de la comunidad</p>
+        </div>
+    </section>
+
+    <!-- Contenido Principal -->
+    <main class="container">
+        <!-- ENERO -->
+        <section class="mes-seccion" id="enero">
+            <h3 class="mes-titulo">🎭 Enero</h3>
+            <div class="peliculas-grid">
+                <div class="pelicula-card" onclick="abrirPelicula('28years', '28 Years Later: El templo de los huesos', '🧟')">
+                    <img src="Images/28 years 2026.jpg" class="pelicula-imagen" alt="28 Years Later">                   
+                    <div class="pelicula-footer">
+                        <h4 class="pelicula-titulo">28 Years Later</h4>
+                        <span class="pelicula-fecha">📅 16 de enero</span>
+                    </div>
+                </div>
+
+                <div class="pelicula-card" onclick="abrirPelicula('ayuda', '¡Ayuda! (Send Help)', '🆘')">
+                    <img src="Images/¡Ayuda! (Send Help).jpg" class="pelicula-imagen" alt="¡Ayuda! (Send Help)">
+                    <div class="pelicula-footer">
+                        <h4 class="pelicula-titulo">¡Ayuda!</h4>
+                        <span class="pelicula-fecha">📅 30 de enero</span>
+                    </div>
+                </div>
+
+                <div class="pelicula-card" onclick="abrirPelicula('hamnet', 'Hamnet', '🎪')">
+                     <img src="Images/hamnet.jpg" class="pelicula-imagen" alt="Hamnet">
+                    <div class="pelicula-footer">
+                        <h4 class="pelicula-titulo">Hamnet</h4>
+                        <span class="pelicula-fecha">📅 23 de enero</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- FEBRERO -->
+        <section class="mes-seccion" id="febrero">
+            <h3 class="mes-titulo">💔 Febrero</h3>
+            <div class="peliculas-grid">
+                <div class="pelicula-card" onclick="abrirPelicula('cumbres', 'Cumbres Borrascosas', '🌪️')">
+                    <img src="Images/Cumbres Borrascosas.jpg" class="pelicula-imagen" alt="Cumbres Borrascosas">
+                    <div class="pelicula-footer">
+                        <h4 class="pelicula-titulo">Cumbres Borrascosas</h4>
+                        <span class="pelicula-fecha">📅 13 de febrero</span>
+                    </div>
+                </div>
+
+                <div class="pelicula-card" onclick="abrirPelicula('scream7', 'Scream 7', '🔪')">
+                     <img src="Images/Scream 7.jpg" class="pelicula-imagen" alt="Scream 7">
+                    <div class="pelicula-footer">
+                        <h4 class="pelicula-titulo">Scream 7</h4>
+                        <span class="pelicula-fecha">📅 26 de febrero</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- MARZO -->
+        <section class="mes-seccion" id="marzo">
+            <h3 class="mes-titulo">🌸 Marzo</h3>
+            <div class="peliculas-grid">
+                <div class="pelicula-card" onclick="abrirPelicula('bride', 'The Bride!', '👰')">
+                   <img src="Images/the bride.jpg" class="pelicula-imagen" alt="The Bride!">
+                    <div class="pelicula-footer">
+                        <h4 class="pelicula-titulo">The Bride!</h4>
+                        <span class="pelicula-fecha">📅 6 de marzo</span>
+                    </div>
+                </div>
+
+                <div class="pelicula-card" onclick="abrirPelicula('hailmary', 'Project Hail Mary', '🚀')">
+                    <img src="Images/Project Hail Mary.jpg" class="pelicula-imagen" alt="Project Hail Mary">
+                    <div class="pelicula-footer">
+                        <h4 class="pelicula-titulo">Project Hail Mary</h4>
+                        <span class="pelicula-fecha">📅 20 de marzo</span>
+                    </div>
+                </div>
+
+                <div class="pelicula-card" onclick="abrirPelicula('peaky', 'Peaky Blinders: El hombre inmortal', '🎩')">
+                    <img src="Images/Peaky Blinders.jpg" class="pelicula-imagen" alt="Peaky Blinders">
+                    <div class="pelicula-footer">
+                        <h4 class="pelicula-titulo">Peaky Blinders</h4>
+                        <span class="pelicula-fecha">📅 20 de marzo</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ABRIL -->
+        <section class="mes-seccion" id="abril">
+            <h3 class="mes-titulo">🎬 Abril</h3>
+            <div class="peliculas-grid">
+                <div class="pelicula-card" onclick="abrirPelicula('michael', 'Michael', '🎤')">
+                    <img src="Images/Michael Jackson.jpg" class="pelicula-imagen" alt="Michael">
+                    <div class="pelicula-footer">
+                        <h4 class="pelicula-titulo">Michael</h4>
+                        <span class="pelicula-fecha">📅 24 de abril</span>
+                    </div>
+                </div>
+
+                <div class="pelicula-card" onclick="abrirPelicula('diablo', 'El diablo viste de Prada 2', '👗')">
+                    <img src="Images/El diablo viste a la moda 2.webp" class="pelicula-imagen" alt="El diablo viste de Prada 2">
+                    <div class="pelicula-footer">
+                        <h4 class="pelicula-titulo">El diablo viste de Prada 2</h4>
+                        <span class="pelicula-fecha">📅 30 de abril</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- MAYO -->
+        <section class="mes-seccion" id="mayo">
+            <h3 class="mes-titulo">🌟 Mayo </h3>
+            <div class="peliculas-grid">
+                <div class="pelicula-card" onclick="abrirPelicula('mandalorian', 'The Mandalorian y Grogu', '🚀')">
+                    <img src="Images/The Mandalorian y Grogu.jpg" class="pelicula-imagen" alt="The Mandalorian y Grogu">
+                    <div class="pelicula-footer">
+                        <h4 class="pelicula-titulo">The Mandalorian y Grogu</h4>
+                        <span class="pelicula-fecha">📅 22 de mayo</span>
+                    </div>
+                </div>
+
+                <div class="pelicula-card" onclick="abrirPelicula('backrooms', 'Backrooms', '🌴')">
+                    <img src="Images/backroom.jpg" class="pelicula-imagen" alt="Backrooms">
+                    <div class="pelicula-footer">
+                        <h4 class="pelicula-titulo">Backrooms</h4>
+                        <span class="pelicula-fecha">📅 29 de mayo</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="mes-seccion" id="junio">
+            <h3 class="mes-titulo">🌟 Junio </h3>
+            <div class="peliculas-grid">
+                <div class="pelicula-card" onclick="abrirPelicula('toystory5', 'Toy Story 5', '🤠')">
+                    <img src="Images/Toy Story 5.jpg" class="pelicula-imagen" alt="Toy Story 5">
+                    <div class="pelicula-footer">
+                        <h4 class="pelicula-titulo">Toy Story 5</h4>
+                        <span class="pelicula-fecha">📅 19 de junio</span>
+                    </div>
+                </div>
+
+                <div class="pelicula-card" onclick="abrirPelicula('masters', 'Masters of the Universe', '⚔️')">
+                   <img src="Images/master the universe.jpg" class="pelicula-imagen" alt="Masters of the Universe">
+                    <div class="pelicula-footer">
+                        <h4 class="pelicula-titulo">Masters of the Universe</h4>
+                        <span class="pelicula-fecha">📅 5 de junio</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- JULIO -->
+        <section class="mes-seccion" id="julio">
+            <h3 class="mes-titulo">☀️ Julio</h3>
+            <div class="peliculas-grid">
+                <div class="pelicula-card" onclick="abrirPelicula('minions3', 'Minions 3', '🍌')">
+                    <img src="Images/minions 3.jpg" class="pelicula-imagen" alt="Minions 3">
+                    <div class="pelicula-footer">
+                        <h4 class="pelicula-titulo">Minions 3</h4>
+                        <span class="pelicula-fecha">📅 1 de julio</span>
+                    </div>
+                </div>
+
+                <div class="pelicula-card" onclick="abrirPelicula('odisea', 'La odisea', '⛵')">
+                    <img src="Images/la odisea.jpg" class="pelicula-imagen" alt="La odisea">
+                    <div class="pelicula-footer">
+                        <h4 class="pelicula-titulo">La odisea</h4>
+                        <span class="pelicula-fecha">📅 17 de julio</span>
+                    </div>
+                </div>
+
+                <div class="pelicula-card" onclick="abrirPelicula('spiderman', 'Spider-Man: Brand New Day', '🕷️')">
+                    <img src="Images/spiderman brand new day.jpg" class="pelicula-imagen" alt="Spider-Man: Brand New Day">
+                    <div class="pelicula-footer">
+                        <h4 class="pelicula-titulo">Spider-Man: Brand New Day</h4>
+                        <span class="pelicula-fecha">📅 31 de julio</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- DICIEMBRE -->
+        <section class="mes-seccion" id="diciembre">
+            <h3 class="mes-titulo">🎄 Diciembre</h3>
+            <div class="peliculas-grid">
+                <div class="pelicula-card" onclick="abrirPelicula('avengers', 'Avengers: Doomsday', '⚡')">
+                    <img src="Images/avengers doomsay.jpg" class="pelicula-imagen" alt="Avengers: Doomsday">
+                    <div class="pelicula-footer">
+                        <h4 class="pelicula-titulo">Avengers: Doomsday</h4>
+                        <span class="pelicula-fecha">📅 18 de diciembre</span>
+                    </div>
+                </div>
+
+                <div class="pelicula-card" onclick="abrirPelicula('dune3', 'Dune: Parte tres', '🪐')">
+                    <img src="Images/dune.jpg" class="pelicula-imagen" alt="Dune: Parte tres">
+                    <div class="pelicula-footer">
+                        <h4 class="pelicula-titulo">Dune: Parte tres</h4>
+                        <span class="pelicula-fecha">📅 25 de diciembre</span>
+                    </div>
+                </div>
+
+                <div class="pelicula-card" onclick="abrirPelicula('jumanji3', 'Jumanji 3', '🌴')">
+                    <img src="Images/jumanji.jpg" class="pelicula-imagen" alt="Jumanji 3">
+                    <div class="pelicula-footer">
+                        <h4 class="pelicula-titulo">Jumanji 3</h4>
+                        <span class="pelicula-fecha">📅 11 de diciembre</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Modal Película -->
+    <div id="pelicula-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modal-titulo">Película</h2>
+                <button class="close-btn" onclick="cerrarPelicula()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <!-- Columna Izquierda -->
+                <div class="info-pelicula">
+                    <div class="pelicula-imagen-grande" id="modal-imagen">🎬</div>
+                    
+                    <div class="info-badges">
+                        <span class="badge" id="modal-genero"></span>
+                        <span class="badge">2026</span>
+                    </div>
+
+                    <div class="info-text">
+                        <strong>📅 Estreno:</strong> <span id="modal-fecha">16 de enero</span>
+                    </div>
+
+                    <div class="info-text">
+                        <strong>🎬 Director:</strong> <span id="modal-director">Director</span>
+                    </div>
+
+                    <div class="info-text">
+                        <strong>⭐ Elenco:</strong> <span id="modal-elenco">Actores</span>
+                    </div>
+
+                    <div class="streaming-platforms">
+                        <div class="streaming-title">Dónde ver:</div>
+                        <div class="streaming-links">
+                            <div class="streaming-links">
+                             <a href="https://www.netflix.com/" target="_blank" class="streaming-link">Netflix</a>
+                             <a href="https://www.primevideo.com/" target="_blank" class="streaming-link">Amazon Prime</a>
+                             <a href="https://www.disneyplus.com/" target="_blank" class="streaming-link">Disney+</a>
+                             <a href="https://www.hbomax.com/" target="_blank" class="streaming-link">HboMax</a>
+                             <a href="https://www.tubi.com/" target="_blank" class="streaming-link">Tubi</a>
+                              </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Columna Derecha - Tabs -->
+                <div class="modal-tabs">
+                    <div class="tabs-header">
+                        <button class="tab-btn active" onclick="cambiarTab('sinopsis')">📖 Sinopsis</button>
+                        <button class="tab-btn" onclick="cambiarTab('trailers')">▶️ Trailers</button>
+                        <button class="tab-btn" onclick="cambiarTab('predicciones')">🔮 Predicciones</button>
+                        <button class="tab-btn" onclick="cambiarTab('resenas')">⭐ Reseñas</button>
+                    </div>
+
+                    <!-- TAB SINOPSIS -->
+                    <div id="sinopsis-tab" class="tab-content active">
+                        <p class="sinopsis-texto" id="modal-sinopsis">Cargando sinopsis...</p>
+                    </div>
+
+                    <!-- TAB TRAILERS -->
+                    <div id="trailers-tab" class="tab-content">
+                        <div class="trailers-container" id="trailers-container">
+                            <div class="trailer-item">
+                                <div class="trailer-titulo">▶️ Trailer Oficial</div>
+                                <div class="trailer-desc">Trailer oficial de la película</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- TAB PREDICCIONES -->
+                    <div id="predicciones-tab" class="tab-content">
+                        <div id="modal-predicciones"></div>
+                    </div>
+
+                    <!-- TAB RESEÑAS -->
+                    <div id="resenas-tab" class="tab-content">
+                        <div class="resena-form">
+                            <div class="form-group">
+                                <label class="form-label">Tu nombre:</label>
+                                <input type="text" class="form-input" id="resena-nombre" placeholder="Tu nombre">
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Tu calificación:</label>
+                                <div class="estrellas" id="estrellas-input">
+                                    <span class="estrella" onclick="seleccionarEstrella(1)">⭐</span>
+                                    <span class="estrella" onclick="seleccionarEstrella(2)">⭐</span>
+                                    <span class="estrella" onclick="seleccionarEstrella(3)">⭐</span>
+                                    <span class="estrella" onclick="seleccionarEstrella(4)">⭐</span>
+                                    <span class="estrella" onclick="seleccionarEstrella(5)">⭐</span>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Tu opinión:</label>
+                                <textarea class="form-textarea" id="resena-texto" placeholder="Comparte tu opinión sobre la película..."></textarea>
+                            </div>
+
+                            <button class="submit-btn" onclick="enviarResena()">Enviar Reseña</button>
+                        </div>
+
+                        <div class="resenas-list" id="resenas-container"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Sobre CineMania MX</h3>
+                    <p>Tu fuente confiable para estrenos cinematográficos, trailers, reseñas de críticos y comentarios de usuarios.</p>
+                </div>
+
+                <div class="footer-section">
+                    <h3>Fechas</h3>
+                    <ul>
+                        <li><a href="#enero">Enero</a></li>
+                        <li><a href="#febrero">Febrero</a></li>
+                        <li><a href="#marzo">Marzo</a></li>
+                        <li><a href="#abril">Abril</a></li>
+                        <li><a href="#mayo">Mayo</a></li>
+                        <li><a href="#junio">Junio</a></li>
+                        <li><a href="#julio">Julio</a></li>
+                        <li><a href="#diciembre">Diciembre</a></li>
+                    </ul>
+                </div>
+            </div>
+
+                        <hr>
+            <!-- Reseña General de la Página -->
+            <div id="resenas-pag" class="resenas-pag">
+                <h3 style="color:#E50914; text-align:center; margin-bottom:15px;">¿Qué te parece CineMania MX?</h3>
+                
+                <div class="resena-form" style="background:#2a2a2a; padding:20px; border-radius:8px;">
+                    <div class="form-group" style="text-align:center;">
+                        <label class="form-label">Califica esta página:</label>
+                        <div class="estrellas" id="estrellas-pagina">
+                            <span class="estrella" onclick="seleccionarEstrellaPagina(1)">⭐</span>
+                            <span class="estrella" onclick="seleccionarEstrellaPagina(2)">⭐</span>
+                            <span class="estrella" onclick="seleccionarEstrellaPagina(3)">⭐</span>
+                            <span class="estrella" onclick="seleccionarEstrellaPagina(4)">⭐</span>
+                            <span class="estrella" onclick="seleccionarEstrellaPagina(5)">⭐</span>
+                        </div>
+                    </div>
+
+                    <button class="submit-btn" onclick="enviarResenaPagina()">Enviar Calificación</button>
+                </div>
+
+                <div id="resenas-pagina-container" style="margin-top:20px;"></div>
+            </div>
+            <hr>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2026 CineMania MX. Todos los derechos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script>
+
+        // Base de datos de películas
+        const peliculas = {
+            '28years': {
+                titulo: '28 Years Later: El templo de los huesos',
+                genero: 'Terror y ciencia ficcion ',
+                emoji: '<img src="images/28 years 2026.jpg" class="pelicula-imagen" alt="28 Years Later">',
+                fecha: '16 de enero',
+                director: 'Juan Carlos Fresnadillo',
+                elenco: 'Aaron Taylor-Johnson, Cillian Murphy',
+                sinopsis: 'Veintiocho años después de que un virus devastador arrasó con la humanidad, los sobrevivientes deben adentrarse en ruinas oscuras y descubrir un templo antiguo que podría ser la clave para salvarse. Una película de terror épica que mezcla la acción con el suspenso psicológico.',
+              trailers: [
+        {
+            titulo: 'Primer Trailer',
+            desc: '28 Años Después: El Templo de los Huesos',
+            link: 'https://www.youtube.com/watch?v=PTQ1naoCw88'
+        },
+
+        {
+            titulo: 'Segundo Trailer',
+            desc: 'Resumen de la pelicula ',
+            link: 'https://www.youtube.com/watch?v=4fUMLN8gB_M'
+        },
+    ],
+                predicciones: [
+                    'Se espera que sea la película de terror más taquillera del año gracias al hype de la franquicia.',
+                    'Los críticos predicen que superará las expectativas con una narrativa más oscura y aterradora.',
+                    'La escena del templo será el momento más viral en redes sociales durante el fin de semana de estreno.',
+                    'Posible nominación a Óscar en categoría de Mejor Fotografía por sus tonos oscuros impresionantes.'
+                ]
+            },
+            'ayuda': {
+                titulo: '¡Ayuda! (Send Help)',
+                genero: 'Comedia negra y thiller de supervivencia ',
+                emoji: '<img src="images/¡Ayuda! (Send Help).jpg" class="pelicula-imagen" alt="¡Ayuda! (Send Help)">',
+                fecha: '30 de enero',
+                director: 'Nicolas Winding Refn',
+                elenco: 'Rachel McAdams, Dylan O\'Brien',
+                sinopsis: 'Un thriller de supervivencia donde dos hermanos quedan atrapados en una isla desierta después de un accidente de avión. Deben luchar no solo contra los elementos de la naturaleza, sino también contra sus propios demonios internos mientras intentan sobrevivir 30 días esperando rescate.',
+                trailers: [
+                {
+                  titulo: 'Primer Trailer',
+                  desc: 'Trailer de Ayuda en español latino',
+                  link: 'https://www.youtube.com/watch?v=37jXU_JQVZY'
+                },
+                {
+                  titulo: 'Segundo Trailer',
+                  desc: 'Detras de camaras de la pelicula ',
+                  link: 'https://www.youtube.com/watch?v=uAO397VEr00&t=50s'
+                },
+    ],
+                predicciones: [
+                    'Se perfila como uno de los thrillers más emocionantes del primer semestre.',
+                    'La química entre los actores será clave para el éxito emocional de la película.',
+                    'Los fans esperan un final sorprendente e impactante que nadie verá venir.',
+                    'Probable competencia en los Premios Independent Spirit por su realismo crudо.'
+                ]
+            },
+            
+            'hamnet': {
+                titulo: 'Hamnet',
+                genero: 'Drama historico y duelo ',
+                emoji: '<img src="images/hamnet.jpg" class="pelicula-imagen" alt="Hamnet">',
+                fecha: '23 de enero',
+                director: 'Chloé Zhao',
+                elenco: 'Timothée Chalamet, Margot Robbie',
+                sinopsis: 'Un drama histórico que explora la vida íntima de la familia Shakespeare durante la peste negra. Se centra en el hijo del famoso dramaturgo y cómo su muerte inspiraría algunas de las obras más importantes de la literatura mundial. Una historia emotiva sobre el amor, la pérdida y la creatividad.',
+                trailers: [
+        {
+            titulo: 'Primer Trailer',
+            desc: 'Trailer official',
+            link: 'https://www.youtube.com/watch?v=Ith7z6FzLe0'
+        },
+        {
+            titulo: 'Segundo Trailer',
+            desc: 'Produccion de diseño ',
+            link: 'https://www.youtube.com/watch?v=LOVJ1ZNp_O0'
+        },
+    ],
+                predicciones: [
+                    'Se espera que sea una de las películas más aclamadas por la crítica del año.',
+                    'Chloé Zhao podría obtener su segunda nominación consecutiva a Mejor Directora en los Óscar.',
+                    'La cinematografía será comparada con obras maestras clásicas del cine.',
+                    'Potencial ganador en categorías de Diseño de Vestuario y Dirección de Arte.'
+                ]
+            },
+            'cumbres': {
+                titulo: 'Cumbres Borrascosas',
+                genero: 'Romance',
+                emoji: '<img src="images/Cumbres Borrascosas.jpg" class="pelicula-imagen" alt="Cumbres Borrascosas">',
+                fecha: '13 de febrero',
+                director: 'Joe Wright',
+                elenco: 'Margot Robbie, Jacob Elordi',
+                sinopsis: 'Una adaptación moderna de la novela clásica de Emily Brontë que transporta la historia a la época contemporánea. Un romance obsesivo en los páramos ingleses se convierte en una historia de pasión destructiva entre dos almas torturadas que no pueden estar juntas ni separadas.',
+                 trailers: [
+        {
+            titulo: 'Primer Trailer',
+            desc: 'Aqui trailer de la pelicula ',
+            link: 'https://www.youtube.com/watch?v=V_LADUttDOo'
+        },
+        {
+            titulo: 'Segundo Trailer',
+            desc: 'Margot Robbie nos enseñas todos los secretos del plató de Cumbres borrascosas ',
+            link: 'https://www.youtube.com/watch?v=Nz8hdfioGHU'
+        },
+    ],
+                predicciones: [
+                    'Los fans de la novela original tendrán reacciones divididas sobre la adaptación.',
+                    'La química entre Robbie y Elordi será el tema principal de conversación.',
+                    'Posible éxito en taquilla debido al atractivo de los actores principales.',
+                    'Se espera que sea tendencia en redes sociales entre la audiencia joven.'
+                ]
+            },
+            'scream7': {
+    titulo: 'Scream 7',
+    genero: 'Terror',
+    emoji: '<img src="images/scream 7.jpg" class="pelicula-imagen" alt="Scream 7">',
+    fecha: '26 de febrero',
+    director: 'Christopher Landon',
+    elenco: 'Neve Campbell, Courtney Cox',
+    sinopsis: 'La séptima entrega de la legendaria franquicia de terror regresa con nuevos asesinos y un nuevo misterio. Sidney Prescott y Gale Weathers se ven envueltas en una nueva ola de asesinatos cuando un Ghostface desconocido comienza su rampage en una nueva ciudad. ¿Quién es realmente el asesino esta vez?',
+
+    trailers: [
+        {
+            titulo: 'Primer Trailer',
+            desc: 'Regresa el icónico Ghostface',
+            link: 'https://www.youtube.com/watch?v=WZXCpje7ZNo'
+        },
+
+        {
+            titulo: 'Segundo Trailer',
+            desc: 'Detras de camaras de la gran pelicula de scream7',
+            link: 'https://www.youtube.com/watch?v=NjZ8zYcsfIU'
+        },
+    ],
+
+    predicciones: [
+        'Los fans esperan que sea tan buena como la primera película original.',
+        'La identidad del asesino será uno de los mayores misterios del cine en 2026.',
+        'Se perfila como la película de terror número uno del año en taquilla.',
+        'Posible resurgimiento de la franquicia similar a Scream de 2022.'
+    ]
+},
+            'bride': {
+                titulo: 'The Bride!',
+                genero: 'Comedia de terror, romance oscuro y fantacia ',
+                emoji: '<img src="images/the bride.jpg" class="pelicula-imagen" alt="The Bride!">',
+                fecha: '6 de marzo',
+                director: 'Maggie Gyllenhaal',
+                elenco: 'Saoirse Ronan, Oscar Isaac',
+                sinopsis: 'Una reinterpretación gótica y perturbadora del clásico de Frankenstein desde la perspectiva de la novia. Una mujer creada en secreto en un laboratorio debe escapar y descubrir su propósito en un mundo que la rechaza. Un filme oscuro, hermoso y aterrador.',
+                 trailers: [
+        {
+            titulo: 'Primer Trailer',
+            desc: 'Trailer de la pelicula la novia ',
+            link: 'https://www.youtube.com/watch?v=IhgcUArO3Uo'
+        },
+        {
+            titulo: 'Segundo Trailer',
+            desc: 'LA NOVIA: ¿Una genialidad incomprendida o un caos narrativo? ',
+            link: 'https://www.youtube.com/watch?v=IY5dFk-UIJ4'
+        },
+    ],
+                predicciones: [
+                    'Se espera que sea un referente de horror gótico para esta década.',
+                    'La dirección de Maggie Gyllenhaal probablemente será aclamada por la crítica.',
+                    'Las imágenes perturbantes se volverán virales en redes sociales.',
+                    'Posible nominación a Mejor Fotografía en festivales de cine independiente.'
+                ]
+            },
+            'hailmary': {
+                titulo: 'Project Hail Mary',
+                genero: 'Ciencia ficcion dura',
+                emoji: '<img src="Images/Project Hail Mary.jpg" class="pelicula-imagen" alt="Project Hail Mary">',
+                fecha: '20 de marzo',
+                director: 'Daniel Espinosa',
+                elenco: 'Ryan Gosling, Tatum Channing',
+                sinopsis: 'Un astronauta solitario se despierta a bordo de una nave espacial sin recordar cómo llegó allí. Debe completar una misión imposible para salvar la Tierra de una extinción inminente. Un thriller de ciencia ficción que mezcla el misterio, la acción y el drama.',
+                 trailers: [
+        {
+            titulo: 'Primer Trailer',
+            desc: 'Primer trailer de la pelicula ',
+            link: 'https://www.youtube.com/watch?v=m08TxIsFTRI'
+        },
+        {
+            titulo: 'Segundo Trailer',
+            desc: 'Project Hail Mary: ASÍ lograron lo IMPOSIBLE en el SET',
+            link: 'https://www.youtube.com/watch?v=gzZnwsp7mAc'
+        },
+    ],
+                predicciones: [
+                    'Se perfila como la película de ciencia ficción más esperada del año.',
+                    'Los efectos visuales serán comparados con las mejores películas espaciales.',
+                    'Ryan Gosling podría dar su mejor actuación dramática en años.',
+                    'Probable ganador en categorías técnicas de los Óscar 2027.'
+                ]
+            },
+            'peaky': {
+                titulo: 'Peaky Blinders: El hombre inmortal',
+                genero: 'Drama Historico y drama criminal',
+                emoji: '<img src="Images/peaky blinders.jpg" class="pelicula-imagen" alt="Peaky Blinders: El hombre inmortal">',
+                fecha: '20 de marzo',
+                director: 'Steven Knight',
+                elenco: 'Cillian Murphy, Paul Anderson',
+                sinopsis: 'La conclusión épica de la serie Peaky Blinders se traduce en cine. Tommy Shelby regresa en una película que promete resolver todos los misterios pendientes y ofrecer un cierre cinematográfico a la historia de la familia criminal inglesa más fascinante.',
+                 trailers: [
+        {
+            titulo: 'Primer Trailer',
+            desc: 'Trailer de la pelicula esperada',
+            link: 'https://www.youtube.com/watch?v=7h_yNYrwdSI'
+        },
+        {
+            titulo: 'Segundo Trailer',
+            desc: 'Resumen de 30 min de la pelicula ',
+            link: 'https://www.youtube.com/watch?v=ivwnpAGIXiA'
+        },
+    ],
+                predicciones: [
+                    'Los fans de la serie estarán esperando ansiosamente este filme.',
+                    'Se espera que sea uno de los mejores dramas de crimen del año.',
+                    'Cillian Murphy probablemente recibirá aclamación crítica por su rol.',
+                    'Posible nominación a Mejor Película Dramática en festivales principales.'
+                ]
+            },
+            'michael': {
+                titulo: 'Michael',
+                genero: 'Drama biografico y musical ',
+                emoji: '<img src="Images/Michael Jackson.jpg" class="pelicula-imagen" alt="Michael">',
+                fecha: '24 de abril',
+                director: 'Antoine Fuqua',
+                elenco: 'Jaafar Jackson, Colman Domingo',
+                sinopsis: 'La biografía del rey del pop Michael Jackson desde su infancia en los Jackson 5 hasta su carrera en solitario. Un retrato íntimo de un hombre atormentado por la fama, la presión y sus propias ambiciones. Una película que promete ser tanto inspiradora como deprimente.',
+                trailers: [
+        {
+            titulo: 'Primer Trailer',
+            desc: 'El grandioso regreso del Rey del Pop',
+            link: 'https://www.youtube.com/watch?v=AuYmKbtnmEA'
+        },
+        {
+            titulo: 'Segundo Trailer',
+            desc: '15 curiosidades sobre el rey del pop',
+            link: 'https://www.youtube.com/watch?v=sfaXQlMUsEo'
+        },
+    ],
+                predicciones: [
+                    'Se espera competencia de Oscar en varias categorías técnicas.',
+                    'Jaafar Jackson podría recibir su primer premio importante por esta actuación.',
+                    'La música de Michael Jackson dominará las playlists durante el estreno.',
+                    'Probable líder en taquilla durante el fin de semana de Semana Santa.'
+                ]
+            },
+            'diablo': {
+                titulo: 'El diablo viste de Prada 2',
+                genero: 'Comedia y drama',
+                emoji: '<img src="Images/El diablo viste a la moda 2.webp" class="pelicula-imagen" alt="El diablo viste de Prada 2">',
+                fecha: '30 de abril',
+                director: 'Spike Jonze',
+                elenco: 'Meryl Streep, Anne Hathaway',
+                sinopsis: 'La secuela del clásico de comedia de moda que todos amamos. Andy Sachs regresa al mundo de la moda como editora senior enfrentándose a nuevos desafíos, rivales y la oportunidad de redimirse. Una historia sobre poder, amistad y el precio del éxito.',
+                trailers: [
+        {
+            titulo: 'Primer Trailer',
+            desc: 'El gran regreso de Miranda Priestly y Andrea Sachs',
+            link: 'https://www.youtube.com/watch?v=O52u0imiqNY'
+        },
+        {
+            titulo: 'Segundo Trailer',
+            desc: 'Behind the Fashion detras de la moda  ',
+            link: 'https://www.youtube.com/watch?v=t7Shi_Xkn_0'
+        },
+    ],
+                predicciones: [
+                    'Los fans de la película original estarán emocionados de regresar a este mundo.',
+                    'Meryl Streep probablemente robará todas las escenas como Miranda Priestly.',
+                    'Se espera que sea taquilla de verano garantizada.',
+                    'Posible revival de la moda 2000s inspirada en la película.'
+                ]
+            },
+            'backrooms': {
+                titulo: 'Backrooms',
+                genero: 'Terror. ciencia ficcion y thiller psicologico ',
+                emoji: '<img src="Images/backroom.jpg" class="pelicula-imagen" alt="Backrooms">',
+                fecha: '29 de mayo',
+                director: 'David Bruckner',
+                elenco: 'John Gallagher Jr., Amy Seimetz',
+                sinopsis: 'Un grupo de personas queda atrapado en un espacio infinito de habitaciones monótonas y laberínticas conocidas como los Backrooms. Deben encontrar una salida mientras enfrentan horrores indescriptibles y la locura que acecha en cada esquina. Un thriller de terror psicológico que redefine el miedo a lo desconocido.',
+                 trailers: [
+        {
+            titulo: 'Primer Trailer',
+            desc: 'Trailer Backrooms (2026) en español latino',
+            link: 'https://www.youtube.com/watch?v=j6xBUJSm_S8'
+        },
+        {
+            titulo: 'Segundo Trailer',
+            desc: '¡BACKROOMS 2026! NUEVOS DETALLES, PREVENTA Y AVANCE FINAL - PELICULA BACKROOMS',
+            link: 'https://www.youtube.com/watch?v=e0uPcyyjUUU'
+        },
+    ],
+                predicciones: [
+                    'Se espera que sea uno de los thrillers de terror más innovadores del año.',
+                    'Los fans del horror psicológico estarán encantados con esta película.',
+                    'Las imágenes inquietantes se volverán virales en redes sociales.',
+                    'Probable nominación a Mejor Película de Terror en festivales especializados.'
+                ]
+            },
+            'mandalorian': {
+                titulo: 'The Mandalorian y Grogu',
+                genero: 'Opera espacial, ciencia ficcion western espacial y aventuras',
+                emoji: '<img src="Images/The Mandalorian y Grogu.jpg" class="pelicula-imagen" alt="The Mandalorian y Grogu">',
+                fecha: '22 de mayo',
+                director: 'Dave Filoni',
+                elenco: 'Pedro Pascal, Giancarlo Esposito',
+                sinopsis: 'El primer filme de Star Wars en años que trae a la pantalla grande la aventura del Mandaloriano y Grogu. Un viaje épico a través de galaxias lejanas en busca de la redención y la familia. Una película que promete ser lo más grande del universo Star Wars.',
+                trailers: [
+        {
+            titulo: 'Primer Trailer',
+            desc: 'Trailer The Mandalorian y Grogu',
+            link: 'https://www.youtube.com/watch?v=Zu46yZrGVhQhttps://www.youtube.com/watch?v=Zu46yZrGVhQ'
+        },
+    ],
+                predicciones: [
+                    'Se espera que sea la película de mayor taquilla del año sin duda.',
+                    'Los fans de Star Wars están listos para esta película hace años.',
+                    'Grogu robará el corazón de la audiencia nuevamente en la pantalla grande.',
+                    'Probable ganador de múltiples premios en categorías técnicas y de diseño.'
+                ]
+            },
+            'toystory5': {
+                titulo: 'Toy Story 5',
+                genero: 'Animacion, aventura y comedia',
+                emoji: '<img src="Images/toy story 5.jpg" class="pelicula-imagen" alt="Toy Story 5">',
+                fecha: '19 de junio',
+                director: 'Mark Nielsen',
+                elenco: 'Tom Hanks, Tim Allen',
+                sinopsis: 'La quinta aventura de Woody, Buzz y la pandilla de juguetes que dejaron huérfanos a millones de fans. Andy ha crecido y nuevos desafíos esperan a los juguetes en un mundo que continúa cambiando. Una historia sobre la amistad eterna y el paso del tiempo.',
+                            trailers: [
+                {
+                  titulo: 'Primer Trailer',
+                  desc: 'El regreso de los juguetes mas traviesos',
+                  link: 'https://www.youtube.com/watch?v=s_qpMMkvHYE'
+                },
+                {
+                  titulo: 'Segundo Trailer',
+                  desc: '21 DETALLES y EASTER EGGS Que Te Perdiste en TOY STORY 5! ',
+                  link: 'https://www.youtube.com/watch?v=6WSQYk5x62I'
+                },
+    ],
+                predicciones: [
+                    'Se espera que sea tan emotiva como Toy Story 3 fue para los fans.',
+                    'Probable líder en taquilla durante el fin de semana del Día del Padre.',
+                    'Nuevos personajes de juguete se convertirán en mercancía instantáneamente.',
+                    'Posible nominación a Mejor Película Animada en múltiples festivales.'
+                ]
+            },
+            'masters': {
+                titulo: 'Masters of the Universe',
+                genero: 'Accion, aventura. fantacia y ciencia ficcion',
+                emoji: '<img src="Images/master the universe.jpg" class="pelicula-imagen" alt="Masters of the Universe">',
+                fecha: '5 de junio',
+                director: 'Travis Knight',
+                elenco: 'Henry Cavill, Sarah Jessica Parker',
+                sinopsis: 'He-Man regresa en una película de acción épica ambientada en el planeta Eternia. El guerrero más poderoso del universo debe luchar contra los poderes del mal cuando Skeletor amenaza con conquistar todo. Una película que promete ser espectacular visualmente.',
+                           trailers: [
+                {
+                  titulo: 'Primer Trailer',
+                  desc: 'Trailer de la pelicula ',
+                  link: 'https://www.youtube.com/watch?v=w-hQZx9oFhw'
+                },
+                {
+                  titulo: 'Segundo Trailer',
+                  desc: 'curisidades del primer trailer ',
+                  link: 'https://www.youtube.com/watch?v=6F8RV8tqv90'
+                },
+    ],
+                predicciones: [
+                    'Se espera que sea recordado como el mejor filme de Masters of the Universe.',
+                    'Henry Cavill podría ganar un premio por su actuación heroica.',
+                    'Los efectos visuales de Eternia serán el espectáculo de verano.',
+                    'Probable secuela confirmada durante el fin de semana de estreno.'
+                ]
+            },
+            'minions3': {
+                titulo: 'Minions 3',
+                genero: 'Comedia ',
+                emoji: '<img src="Images/minions 3.jpg" class="pelicula-imagen" alt="Minions 3">',
+                fecha: '1 de julio',
+                director: 'Ken Daurio',
+                elenco: 'Steve Carell, Kristen Wiig',
+                sinopsis: 'Los pequeños amarillos regresan en su tercera aventura solitaria. Los Minions se ven envueltos en un nuevo plan de un villano excéntrico mientras causan caos hilariante. Una película de comedia pura para todas las edades.',
+                 trailers: [
+                {
+                  titulo: 'Primer Trailer',
+                  desc: 'Trailer de nuestros pequeños amigos, y traviesos ',
+                  link: 'https://www.youtube.com/watch?v=KG9wqUZYrMo'
+                },
+                {
+                  titulo: 'Segundo Trailer',
+                  desc: 'Descubre los 21 detalles que nadie noto sobre el trailer!! ',
+                  link: 'https://www.youtube.com/watch?v=5S0P-siP9QE'
+                },
+    ],
+                predicciones: [
+                    'Será uno de los mayores éxitos de taquilla del verano.',
+                    'Los niños estarán pidiendo juguetes Minions a sus padres inmediatamente.',
+                    'Será la película animada que más dinero recaude en su fin de semana de apertura.',
+                    'Probable renovación de merchandising en todas las tiendas.'
+                ]
+            },
+            'odisea': {
+                titulo: 'La odisea',
+                genero: 'Aventura, accion, fantacia epica',
+                emoji: '<img src="Images/la odisea.jpg" class="pelicula-imagen" alt="La odisea">',
+                fecha: '17 de julio',
+                director: 'Christopher Nolan',
+                elenco: 'Timothée Chalamet, Florence Pugh',
+                sinopsis: 'Christopher Nolan adapta la epopeya griega clásica en una aventura épica de tres horas. Ulises emprende su viaje de regreso a casa después de la caída de Troya, enfrentando monstruos, dioses y su propia humanidad. Una película que redefinirá el género de aventura épica.',
+                trailers: [
+                {
+                  titulo: 'Primer Trailer',
+                  desc: 'Primer trailer oficial de odisea ',
+                  link: 'https://www.youtube.com/watch?v=7GxoGRGkhBQ'
+                },
+                {
+                  titulo: 'Segundo Trailer',
+                  desc: 'EL TRAILER DE LA ODISEA TIENE UN DETALLE HISTÓRICO  ',
+                  link: 'https://www.youtube.com/watch?v=bU4ySd9KILc'
+                },
+    ],
+                predicciones: [
+                    'Se espera que sea la película más aclamada por la crítica del año.',
+                    'Posible ganador en múltiples categorías técnicas en los Óscar 2027.',
+                    'La cinematografía de Hoyte van Hoytema será referencia en el cine.',
+                    'Probable película favorita de los cinéfilos durante décadas.'
+                ]
+            },
+            'spiderman': {
+                titulo: 'Spider-Man: Brand New Day',
+                genero: 'Accion y ciencia ficcion',
+                emoji: '<img src="Images/spiderman brand new day.jpg" class="pelicula-imagen" alt="Spider-Man: Brand New Day">',
+                fecha: '31 de julio',
+                director: 'Destin Daniel Cretton',
+                elenco: 'Tom Holland, Zendaya',
+                sinopsis: 'La cuarta película de Spider-Man de Tom Holland lo enfrenta a nuevos villanos y desafíos en su misión de mantener Nueva York segura. Gwen Stacy regresa en una versión oscura y vengativa como Carnage. Un filme que promete ser el más oscuro de la franquicia.',
+                            trailers: [
+                {
+                  titulo: 'Primer Trailer',
+                  desc: 'El regreso de nuestro super-heroe y amigo spiderman',
+                  link: 'https://www.youtube.com/watch?v=Pw1X-57Ms-8'
+                },
+                {
+                  titulo: 'Segundo Trailer',
+                  desc: 'Lo Que no Viste Curiosidades y Referencias por Tony Stark',
+                  link: 'https://www.youtube.com/watch?v=a1NsBNFHgV8'
+                },
+    ],
+                predicciones: [
+                    'Se espera que rompa todos los récords de taquilla de Marvel en la apertura.',
+                    'Tom Holland podría dar su mejor actuación como Spider-Man hasta ahora.',
+                    'El regreso de ciertos personajes sorprenderá a los fans.',
+                    'Confirmación de próximas películas de Spider-Man Man durante el estreno.'
+                ]
+            },
+            'avengers': {
+                titulo: 'Avengers: Doomsday',
+                genero: 'Superheroes, accion y ciencia ficcion',
+                emoji: '<img src="Images/avengers doomsay.jpg" class="pelicula-imagen" alt="Avengers: Doomsday">',
+                fecha: '18 de diciembre',
+                director: 'Anthony y Joe Russo',
+                elenco: 'Robert Downey Jr., Tom Holland',
+                sinopsis: 'Robert Downey Jr. regresa como Doctor Doom en esta película que promete ser la más ambiciosa del MCU. Los Vengadores deben reunirse para enfrentarse a la amenaza más grande que jamás hayan visto. El fin de una era en el Universo Cinematográfico Marvel llega con esta película épica.',
+                trailers: [
+                {
+                  titulo: 'Primer Trailer',
+                  desc: 'Primer trailer oficial',
+                  link: 'https://www.youtube.com/watch?v=NzsDtHCdhGc'
+                },
+                {
+                  titulo: 'Segundo Trailer',
+                  desc: '¿Qué pasará en Avengers Doomsday?',
+                  link: 'https://www.youtube.com/watch?v=yacFFLf51zk'
+                },
+    ],
+                predicciones: [
+                    'Será la película de mayor taquilla del año sin ninguna duda.',
+                    'Robert Downey Jr. recibirá aclamación universal por su regreso.',
+                    'Los fans esperarán giros argumentales sorprendentes y emocionales.',
+                    'Confirmación de Fase 6 del MCU durante la película.'
+                ]
+            },
+            'dune3': {
+                titulo: 'Dune: Parte tres',
+                genero: 'Ciencia ficcion',
+                emoji: '<img src="images/dune.jpg" class="pelicula-imagen" alt="Dune: Parte tres">',
+                fecha: '25 de diciembre',
+                director: 'Denis Villeneuve',
+                elenco: 'Timothée Chalamet, Zendaya',
+                sinopsis: 'La conclusión épica de la trilogía Dune trae el final de la guerra por el control de Arrakis. Paul Atreides debe elegir entre su destino profetizado y el costo de su humanidad. Una película que promete cerrar la saga de forma épica y satisfactoria.',
+                            trailers: [
+                {
+                  titulo: 'Primer Trailer',
+                  desc: 'Trailer oficial de done 3',
+                  link: 'https://www.youtube.com/watch?v=FgZ9icNXpFQ'
+                },
+                {
+                  titulo: 'Segundo Trailer',
+                  desc: '30 cosas que no viste ',
+                  link: 'https://www.youtube.com/watch?v=RiL-K810Gk4'
+                },
+    ],
+                predicciones: [
+                    'Será considerada la película de ciencia ficción más grande jamás hecha.',
+                    'Posible ganador de múltiples Óscar en categorías técnicas.',
+                    'Denis Villeneuve recibirá reconocimiento universal como director.',
+                    'Probable que se considere una obra maestra del cine de ciencia ficción.'
+                ]
+            },
+            'jumanji3': {
+                titulo: 'Jumanji 3',
+                genero: 'Aventuras, fantasia y accion',
+                emoji: '<img src="images/jumanji.jpg" class="pelicula-imagen" alt="Jumanji 3">',
+                fecha: '11 de diciembre',
+                director: 'Jaume Collet-Serra',
+                elenco: 'Dwayne Johnson, Jack Black',
+                sinopsis: 'La tercera aventura en la jungla mágica de Jumanji trae nuevos peligros y misterios. Los amigos deben aventurarse una vez más en el juego mortal para salvar a uno de los suyos. Una película que promete ser tan divertida como las anteriores.',
+                            trailers: [
+                {
+                  titulo: 'Primer Trailer',
+                  desc: 'Trailer de Jumanji',
+                  link: 'https://www.youtube.com/watch?v=o6j92KoxZq4'
+                },
+                {
+                  titulo: 'Segundo Trailer',
+                  desc: '15 curiosidades de jumanji ',
+                  link: 'https://www.youtube.com/watch?v=t90xiCPOfy8'
+                },
+    ],
+                predicciones: [
+                    'Será un gran éxito familiar durante las vacaciones navideñas.',
+                    'Dwayne Johnson continuará siendo una estrella taquillera masiva.',
+                    'El humor y la acción mantendrán a toda la familia entretenida.',
+                    'Posible confirmación de cuarta película durante el estreno.'
+                ]
+            }
+        };
+
+        let peliculaActual = null;
+        let resenas = {};
+
+        // Cargar reseñas guardadas
+        const resenasGuardadas = localStorage.getItem('resenas');
+        if (resenasGuardadas) {
+            resenas = JSON.parse(resenasGuardadas);
+        }
+
+        let estrellaSeleccionadas = 0;
+
+        // Inicializar reseñas por defecto
+        Object.keys(peliculas).forEach(id => {
+            if (!resenas[id]) {
+                resenas[id] = [
+                    { nombre: 'Carlos M.', calificacion: 5, texto: 'Increíble, definitivamente voy a verla.' },
+                    { nombre: 'María López', calificacion: 4, texto: 'Se ve muy buena, aunque tengo mis dudas sobre el final.' },
+                    { nombre: 'Juan Pérez', calificacion: 5, texto: 'No puedo esperar más. Esta es la película del año.' }
+                ];
+            }
+        });
+
+        function abrirPelicula(id) {
+            peliculaActual = id;
+            const pelicula = peliculas[id];
+            
+            document.getElementById('modal-titulo').textContent = pelicula.titulo;
+            document.getElementById('modal-imagen').innerHTML = pelicula.emoji || '🎬';
+            document.getElementById('modal-fecha').textContent = pelicula.fecha;
+            document.getElementById('modal-director').textContent = pelicula.director;
+            document.getElementById('modal-elenco').textContent = pelicula.elenco;
+            document.getElementById('modal-genero').textContent = pelicula.genero;
+            document.getElementById('modal-sinopsis').textContent = pelicula.sinopsis;
+
+            // Trailers
+            const trailersHtml = pelicula.trailers.map(t => `
+                <a class="trailer-item" href="${t.link}" target="_blank">
+                    <div class="trailer-titulo">▶️ ${t.titulo}</div>
+                    <div class="trailer-desc">${t.desc}</div>
+                </a>
+            `).join('');
+            document.getElementById('trailers-container').innerHTML = trailersHtml;
+
+            // Predicciones
+            const prediccionesHtml = pelicula.predicciones.map(p => `
+                <div class="prediccion-item">
+                    <div class="prediccion-titulo">🔮 Predicción</div>
+                    <div class="prediccion-texto">${p}</div>
+                </div>
+            `).join('');
+            document.getElementById('modal-predicciones').innerHTML = prediccionesHtml;
+
+            mostrarResenas();
+
+            // Reset formulario
+            document.getElementById('resena-nombre').value = '';
+            document.getElementById('resena-texto').value = '';
+            estrellaSeleccionadas = 0;
+            limpiarEstrellas();
+
+            document.getElementById('pelicula-modal').classList.add('active');
+        }
+
+        function cerrarPelicula() {
+            document.getElementById('pelicula-modal').classList.remove('active');
+            peliculaActual = null;
+        }
+
+        function cambiarTab(tab) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+
+            event.target.classList.add('active');
+            document.getElementById(tab + '-tab').classList.add('active');
+        }
+
+        function seleccionarEstrella(num) {
+            estrellaSeleccionadas = num;
+            const estrellas = document.querySelectorAll('#estrellas-input .estrella');
+            estrellas.forEach((e, i) => {
+                e.classList.toggle('active', i < num);
+            });
+        }
+
+        function limpiarEstrellas() {
+            document.querySelectorAll('#estrellas-input .estrella').forEach(e => e.classList.remove('active'));
+        }
+
+        function enviarResena() {
+            const nombre = document.getElementById('resena-nombre').value.trim();
+            const texto = document.getElementById('resena-texto').value.trim();
+
+            if (!nombre || estrellaSeleccionadas === 0 || !texto) {
+                alert('Por favor completa todos los campos');
+                return;
+            }
+
+            if (!resenas[peliculaActual]) resenas[peliculaActual] = [];
+
+            resenas[peliculaActual].unshift({
+                nombre: nombre,
+                calificacion: estrellaSeleccionadas,
+                texto: texto
+            });
+
+            localStorage.setItem('resenas', JSON.stringify(resenas));
+            mostrarResenas();
+
+            // Limpiar
+            document.getElementById('resena-nombre').value = '';
+            document.getElementById('resena-texto').value = '';
+            estrellaSeleccionadas = 0;
+            limpiarEstrellas();
+
+            alert('¡Reseña enviada exitosamente!');
+        }
+
+        function mostrarResenas() {
+            const resenasList = resenas[peliculaActual] || [];
+            const total = resenasList.length;
+
+            let promedio = 0;
+            if (total > 0) {
+                promedio = (resenasList.reduce((sum, r) => sum + r.calificacion, 0) / total).toFixed(1);
+            }
+
+            // Calcular porcentajes por estrella
+            const conteo = [0, 0, 0, 0, 0];
+            resenasList.forEach(r => {
+                if (r.calificacion >= 1 && r.calificacion <= 5) {
+                    conteo[r.calificacion - 1]++;
+                }
+            });
+
+            let distribucionHTML = '';
+            for (let i = 5; i >= 1; i--) {
+                const count = conteo[i-1];
+                const porcentaje = total > 0 ? Math.round((count / total) * 100) : 0;
+                distribucionHTML += `
+                    <div style="display:flex; align-items:center; gap:10px; margin:4px 0; font-size:0.9rem;">
+                        <span>${i} ⭐</span>
+                        <div style="flex:1; background:#444; height:8px; border-radius:4px; overflow:hidden;">
+                            <div style="width:${porcentaje}%; background:#E50914; height:100%;"></div>
+                        </div>
+                        <span>${porcentaje}% (${count})</span>
+                    </div>
+                `;
+            }
+
+            const promedioHTML = `
+                <div style="background:#2a2a2a; padding:15px; border-radius:8px; margin-bottom:20px; border:1px solid #E50914;">
+                    <h3 style="margin:0 0 10px 0;">⭐ Promedio: <strong>${promedio}/5</strong></h3>
+                    <p style="margin:0; color:#aaa;">Basado en ${total} reseñas</p>
+                    <div style="margin-top:15px;">
+                        ${distribucionHTML}
+                    </div>
+                </div>
+            `;
+
+            const htmlResenas = resenasList.map(r => `
+                <div class="resena">
+                    <div class="resena-header">
+                        <div>
+                            <div class="resena-autor">${r.nombre}</div>
+                            <div class="resena-calificacion">
+                                ${'⭐'.repeat(r.calificacion)} (${r.calificacion}/5)
+                            </div>
+                        </div>
+                    </div>
+                    <div class="resena-texto">"${r.texto}"</div>
+                </div>
+            `).join('');
+
+            document.getElementById('resenas-container').innerHTML = promedioHTML + htmlResenas;
+        }
+
+        // Cerrar modal al hacer clic fuera
+        window.onclick = function(event) {
+            const modal = document.getElementById('pelicula-modal');
+            if (event.target === modal) {
+                cerrarPelicula();
+            }
+        }
+
+        // Variables para reseña de página
+let calificacionPagina = 0;
+let reseñasPagina = JSON.parse(localStorage.getItem('reseñasPagina')) || [];
+
+// Seleccionar estrella para la página
+function seleccionarEstrellaPagina(num) {
+    calificacionPagina = num;
+    const estrellas = document.querySelectorAll('#estrellas-pagina .estrella');
+    estrellas.forEach((e, i) => {
+        e.classList.toggle('active', i < num);
+    });
+}
+
+// Enviar calificación de la página
+function enviarResenaPagina() {
+    if (calificacionPagina === 0) {
+        alert('Por favor selecciona una calificación');
+        return;
+    }
+
+    reseñasPagina.unshift({
+        calificacion: calificacionPagina,
+        fecha: new Date().toLocaleDateString('es-MX')
+    });
+
+    localStorage.setItem('reseñasPagina', JSON.stringify(reseñasPagina));
+    
+    alert('¡Gracias por calificar la página! ⭐');
+    calificacionPagina = 0;
+    document.querySelectorAll('#estrellas-pagina .estrella').forEach(e => e.classList.remove('active'));
+    
+    mostrarResenasPagina();
+}
+
+// Mostrar calificaciones de la página
+function mostrarResenasPagina() {
+    const container = document.getElementById('resenas-pagina-container');
+    const total = reseñasPagina.length;
+    
+    if (total === 0) {
+        container.innerHTML = '<p style="text-align:center; color:#888;">Aún no hay calificaciones.</p>';
+        return;
+    }
+
+    const promedio = (reseñasPagina.reduce((sum, r) => sum + r.calificacion, 0) / total).toFixed(1);
+
+    let html = `
+        <div style="text-align:center; margin-bottom:15px;">
+            <strong>⭐ Promedio: ${promedio}/5</strong> (${total} calificaciones)
+        </div>
+    `;
+
+    container.innerHTML = html;
+}
+
+// Llamar al mostrar al cargar
+document.addEventListener('DOMContentLoaded', mostrarResenasPagina);
+    </script>
+</body>
+</html>
